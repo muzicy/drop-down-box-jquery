@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>下拉列表框的联动</title>
+<style>
+.showSel {width:500px; height:500px; background:#ccc;display:none;}
+</style>
+<script src="jquery.js"></script>
+<script>
+$(function(){
+  function objInit(obj) {
+	return $(obj).html("<option>请选择</option>")  
+  };
+  
+  var arrData = {
+	  
+	厂商1: {品牌1_1:"型号1.1.1,型号1.1.2",
+	        品牌1_2:"型号1.2.1,型号1.2.2"},
+	厂商2: {品牌2_1:"型号2.1.1,型号2.1.2",
+	       品牌2_2:"型号2.2.1,型号2.2.2"
+		   },
+    厂商3: {品牌3_1:"型号3.1.1,型号3.1.2",
+	        品牌3_2:"型号3.2.1,型号3.2.2"}  
+    };
+	
+ $.each(arrData,function(s1){
+   $(".sel1").append("<option>"+s1+"</option>");	 
+ });
+ 
+ $(".sel1").change(function(){
+    objInit(".sel2");
+	objInit(".sel3");
+	
+   $.each(arrData,function(s1,s2){
+	  if ($(".sel1 option:selected").text()==s1) {
+		 $.each(s2,function(s3,s4){
+			$(".sel2").append("<option>"+s3+"</option>"); 
+	     });
+		
+		 $(".sel2").change(function(){
+		   objInit(".sel3");
+		   $.each(s2,function(s3,s4){
+			  if($(".sel2 option:selected").text()==s3) {				
+				  $.each(s4.split(","),function(){
+					 $(".sel3").append("<option>"+this+"</option>")  
+				 	 
+				})  
+			  }   
+		   })	 
+		 }) 
+		 
+	  };
+   })
+   
+ })
+ $(".query").click(function(){
+   var strValue="您选择的是： ";
+   strValue += $(".sel1 option:selected").text();
+   strValue += $(".sel2 option:selected").text();	
+   strValue += $(".sel3 option:selected").text();
+   
+   $(".showSel").show().html(strValue); 
+ }) 
+})
+</script>
+</head>
+
+<body>
+<div class="continer">
+厂商：<select class="sel1"><option>请选择</option></select>
+品牌：<select class="sel2"><option>请选择</option></select>
+型号：<select class="sel3"><option>请选择</option></select>
+<button class="query">查询</button>
+<div class="showSel"></div>
+</div>
+</body>
+</html>
